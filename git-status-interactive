@@ -1,0 +1,63 @@
+# git-status-interactive
+# An obnoxiously basic script to open the results of git status in a
+# text editor so a user can annotate it, and then turn one-letter user instructions 
+# into commands to add/remove files to/from the staging area, ignore files,
+# et cetera.
+# See the writeup for details at http://modelingwithdata.org/arch/00000031.htm
+
+# Being simple, there is no error-checking or other such frivolity. The 
+# script is POSIX-standard and uses only git status, sed, and sh.
+
+# Licensed under the GNU GPL v2; see LICENSE for details.
+
+# --Ben Klemens, December 2009
+
+
+tempfile=git-istatus.tmp
+
+# man git-status says "all the output lines are prefixed with #." 
+# This is not the case, so insert #s, add the instructions at the header, 
+# and some optional commands at the tail.
+git status   \
+| sed -e "s/^/#/" \
+      -e '1i\
+# Change the # at the head of the line to one of the following (or leave the # to ignore): \
+# a  add currently untracked file\
+# r  remove tracked file from repository, leaving it in working dir\
+# R  remove tracked file from repository and working dir\
+# i  ignore, by adding this file to .git/info/exclude\
+# c  check out the old version, throwing out unchecked-in changes\
+# e  edit the file\
+# ea edit then add; useful for merging\
+\
+' -e '$a\
+\
+\
+# To commit after your changes, uncomment the next line. Feel free to add -m "message"\
+# git commit' > $tempfile
+
+if [ ! -n "$EDITOR" ] ; then
+	EDITOR=pico
+	echo "The $EDITOR environment variable seems to not be set. Trying pico."
+fi
+
+#User edits here.
+$EDITOR $tempfile
+
+#Replace one-line markers with their respective commands.
+#Delete blanks and comments so verbose shell execution is cleaner.
+#Delete markers like "modified:" or "new file:"
+sed -e "/^#/d"\
+    -e "/^$/d"\
+    -e "s/\(both \|\)\(new file\|modified\|deleted\|added\|renamed\|unmerged\)://"\
+    -e "s/^a[ \t]\(.*\)/git add \1/" \
+    -e "s/^r[ \t]\(.*\)/git rm --cached \1/" \
+    -e "s/^c[ \t]\(.*\)/git checkout -- \1/" \
+    -e "s/^R[ \t]\(.*\)/git rm \1/" \
+    -e "s/^i[ \t]*\(.*\)/echo \"\1\" >> `git rev-parse --git-dir`\/info\/exclude/" \
+    -e "s/^e[^a][ \t][ \t]*\(.*\)/\$EDITOR \"\1\"/"  \
+    -e "s/^ea[ \t]*\(.*\)/\$EDITOR \"\1\" ;  git add \1/"  \
+< $tempfile > $tempfile.do 
+rm $tempfile
+sh -v $tempfile.do
+rm $tempfile.do
