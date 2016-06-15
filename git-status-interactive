@@ -48,6 +48,7 @@ $EDITOR $tempfile
 #Delete blanks and comments so verbose shell execution is cleaner.
 #Delete markers like "modified:" or "new file:"
 sed -e "/^#/d"\
+    -e "/^$/d"\
     -e "s/\(both \|\)\(new file\|modified\|deleted\|added\|renamed\|unmerged\)://"\
     -e "s/^a[ \t]\+\(.*\)/git add \1/" \
     -e "s/^r[ \t]\+\(.*\)/git rm --cached \1/" \
