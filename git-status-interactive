@@ -48,16 +48,18 @@ $EDITOR $tempfile
 #Delete blanks and comments so verbose shell execution is cleaner.
 #Delete markers like "modified:" or "new file:"
 sed -e "/^#/d"\
-    -e "/^$/d"\
     -e "s/\(both \|\)\(new file\|modified\|deleted\|added\|renamed\|unmerged\)://"\
-    -e "s/^a[ \t]*\(.*\)/git add \1/" \
-    -e "s/^r[ \t]*\(.*\)/git rm --cached \1/" \
-    -e "s/^c[ \t]*\(.*\)/git checkout -- \1/" \
-    -e "s/^R[ \t]*\(.*\)/git rm \1/" \
-    -e "s/^i[ \t]*\(.*\)/echo \"\1\" >> `git rev-parse --git-dir`\/info\/exclude/" \
+    -e "s/^a[ \t]\+\(.*\)/git add \1/" \
+    -e "s/^r[ \t]\+\(.*\)/git rm --cached \1/" \
+    -e "s/^c[ \t]\+\(.*\)/git checkout -- \1/" \
+    -e "s/^R[ \t]\+\(.*\)/git rm \1/" \
+    -e "s/^i[ \t]\+\(.*\)/echo \"\1\" >> .gitignore/" \
     -e "s/^e[^a][ \t][ \t]*\(.*\)/\$EDITOR \"\1\"/"  \
     -e "s/^ea[ \t]*\(.*\)/\$EDITOR \"\1\" ;  git add \1/"  \
 < $tempfile > $tempfile.do 
 rm $tempfile
 sh -v $tempfile.do
 rm $tempfile.do
+
+# Old version wrote to .git/info/exclude
+#    -e "s/^i[ \t]*\(.*\)/echo \"\1\" >> `git rev-parse --git-dir`\/info\/exclude/" \
