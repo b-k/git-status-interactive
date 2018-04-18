@@ -1,19 +1,19 @@
 git-status-interactive
 ======================
 
-Produce an editable list of file statuses, so you can decide whether to add/ignore/remove/... each file. One of the 420,000 projects on Github about Git.
+Produce an editable list of file statuses, so you can decide whether to add/ignore/remove/... each file. One of the 2,067,087 projects on Github about Git (as of this writing).
 
 The procedure for using this script:
 
 * Type `git istatus`.
 
 * Your favorite editor opens. There, you see the output from `git status`, which is mostly
-a list of files that need to be somehow handled. At the top is a list of 
+a list of files that need to be somehow handled.
+
+* You edit the file to specify what happens to every file. At the top is a list of 
 instructions for some basic operations: put an `a` at the head of a line to add a
 file, an `i` to ignore it from now on, an `ea` to edit then add (which you'll do if
 you're merging), an `r` to remove the file from the repository, and so on.
-
-* You edit the file to specify what happens to every file.
 
 * When you exit your editor, your instructions are run.    
 
