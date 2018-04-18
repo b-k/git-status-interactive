@@ -20,6 +20,7 @@ tempfile=git-istatus.tmp
 # and some optional commands at the tail.
 git status   \
 | sed -e "/^[^#]/ s/^/#/" \
+      -e "/git-istatus.tmp/d" \
       -e '1i\
 # Change the # at the head of the line to one of the following (or leave the # to ignore): \
 # a  add currently untracked file\
