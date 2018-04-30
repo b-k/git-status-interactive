@@ -24,9 +24,10 @@ git status   \
       -e '1i\
 # Change the # at the head of the line to one of the following (or leave the # to ignore): \
 # a  add currently untracked file\
-# r  remove tracked file from repository, leaving it in working dir\
-# R  remove tracked file from repository and working dir\
 # i  ignore, by adding this file to .git/info/exclude\
+# R  remove tracked file from repository and working dir\
+# r  remove tracked file from repository, leaving it in working dir\
+# rm  remove tracked file from working dir only\
 # c  check out the old version, throwing out unchecked-in changes\
 # e  edit the file\
 # ea edit then add; useful for merging\
@@ -39,7 +40,7 @@ git status   \
 
 if [ ! -n "$EDITOR" ] ; then
 	EDITOR=pico
-	echo "The $EDITOR environment variable seems to not be set. Trying pico."
+	echo "The $EDITOR environment variable seems to not be set and exported. Trying pico."
 fi
 
 #User edits here.
